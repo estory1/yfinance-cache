@@ -17,11 +17,17 @@ from . import yfc_cache_manager as yfcm
 from . import yfc_utils as yfcu
 
 
-exchanges_lock = Lock()
-manager = Manager()
-exchange_locks = manager.dict()
+if __name__ == '__main__':
+    exchanges_lock = Lock()
+    manager = Manager()
+    exchange_locks = manager.dict()
+    exchangeTzCache = {}
+    schedCache = {}
+    schedDbMetadata = {}
+    db_mem = sql.connect(":memory:")
+    schedIntervalsCache = {}
 
-exchangeTzCache = {}
+
 def GetExchangeTzName(exchange):
     yfcu.TypeCheckStr(exchange, "exchange")
 
@@ -58,11 +64,6 @@ def SetExchangeTzName(exchange, tz):
             exchangeTzCache[exchange] = tz
             yfcm.StoreCacheDatum("exchange-"+exchange, "tz", tz)
 
-calCache = {}
-schedCache = {}
-schedDbMetadata = {}
-db_mem = sql.connect(":memory:")
-schedIntervalsCache = {}
 
 
 # TODO: Ensure all methods support Monthly intervals, e.g. GetTimestampCurrentInterval
